@@ -6,4 +6,8 @@ public class DigitalOceanController {
     public static Handler getDroplets = ctx -> {
 
     };
+
+    public static Handler getAccount = ctx -> {
+
+    };
 }

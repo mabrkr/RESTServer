@@ -30,12 +30,14 @@ public class Main {
                     "Server got " + ctx.method()
                             + " on " + ctx.url()));
             // TODO: endpoints til alt!
-            get(Endpoints.DIGITAL_OCEAN_ALL_DROPLETS, DigitalOceanController.getDroplets);
+            get(Endpoints.DIGITAL_OCEAN_DROPLETS, DigitalOceanController.getDroplets);
+            get(Endpoints.DIGITAL_OCEAN_ACCOUNT, DigitalOceanController.getAccount);
         });
     }
 
     // container for endpoints
     private static class Endpoints {
-        private static final String DIGITAL_OCEAN_ALL_DROPLETS = "/digitalocean";
+        private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean";
+        private static final String DIGITAL_OCEAN_ACCOUNT = "/digitalocean/account";
     }
 }
