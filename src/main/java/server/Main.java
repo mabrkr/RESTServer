@@ -35,7 +35,7 @@ public class Main {
         });
     }
 
-    // container for endpoints
+    // Container for endpoints
     private static class Endpoints {
         private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean";
         private static final String DIGITAL_OCEAN_ACCOUNT = "/digitalocean/account";
