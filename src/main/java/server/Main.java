@@ -40,7 +40,7 @@ public class Main {
 
     }
 
-    // Container for endpoints
+    // Container for endpoint URLs
     private static class Endpoints {
         private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean/droplets";
         private static final String DIGITAL_OCEAN_ACCOUNT = "/digitalocean/account";
