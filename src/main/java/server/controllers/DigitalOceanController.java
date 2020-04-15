@@ -7,12 +7,16 @@ import kong.unirest.Unirest;
 
 public class DigitalOceanController {
     public static Handler getDroplets = ctx -> {
-
+        HttpResponse<JsonNode> response = Unirest.get("https://api.digitalocean.com/v2/droplets")
+                .header("accept", "application/json")
+                .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
+                .asJson();
     };
 
     public static Handler getAccount = ctx -> {
-        HttpResponse<JsonNode> response = Unirest.post("https://api.digitalocean.com/v2/account")
+        HttpResponse<JsonNode> response = Unirest.get("https://api.digitalocean.com/v2/account")
                 .header("accept", "application/json")
-                .header("")
+                .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
+                .asJson();
     };
 }

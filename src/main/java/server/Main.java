@@ -2,6 +2,9 @@ package server;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
 import server.controllers.DigitalOceanController;
 
 import static io.javalin.apibuilder.ApiBuilder.before;
@@ -15,7 +18,7 @@ public class Main {
 
         // Setup
         Javalin app = Javalin.create(config ->
-                config.addStaticFiles("/public").enableCorsForAllOrigins())
+                config.enableCorsForAllOrigins())
                 .start(8080);
 
         // Fejlhåndtering TODO: lav ordentligt
@@ -33,6 +36,8 @@ public class Main {
             get(Endpoints.DIGITAL_OCEAN_DROPLETS, DigitalOceanController.getDroplets);
             get(Endpoints.DIGITAL_OCEAN_ACCOUNT, DigitalOceanController.getAccount);
         });
+
+
     }
 
     // Container for endpoints
