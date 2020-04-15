@@ -2,6 +2,7 @@ package server;
 
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import server.controllers.DigitalOceanController;
 
 import static io.javalin.apibuilder.ApiBuilder.before;
 import static io.javalin.apibuilder.ApiBuilder.get;
@@ -17,7 +18,7 @@ public class Main {
                 config.addStaticFiles("/public").enableCorsForAllOrigins())
                 .start(8080);
 
-        // Fejlhåndtering
+        // Fejlhåndtering TODO: lav ordentligt
         app.exception(Exception.class, (e, ctx) -> {
             e.printStackTrace();
             ctx.result("Serverfejl: " + e.toString());
@@ -29,6 +30,12 @@ public class Main {
                     "Server got " + ctx.method()
                             + " on " + ctx.url()));
             // TODO: endpoints til alt!
+            get(Web.DIGITAL_OCEAN_ALL, DigitalOceanController.getDroplets);
         });
+    }
+
+    // URL's
+    private static class Web {
+        private static final String DIGITAL_OCEAN_ALL = "/digitalocean";
     }
 }
