@@ -25,4 +25,7 @@ public class DigitalOceanController {
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
     };
+    public static Handler getDroplet;
+    public static Handler createDroplet;
+    public static Handler deleteDroplet;
 }
