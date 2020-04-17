@@ -24,14 +24,12 @@ public class Server {
         // Javalin error handling TODO: lav ordentligt
         app.exception(Exception.class, (e, ctx) -> {
             e.printStackTrace();
-            ctx.result("Serverfejl: " + e.toString());
+            ctx.result("Server error: " + e.toString());
         });
 
         // Javalin REST endpoints
         app.routes(() -> {
-            before(ctx -> System.out.println(
-                    "Server: " + ctx.method()
-                            + " on " + ctx.url()));
+            before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
             // TODO: endpoints til alt!
             get(Endpoints.DIGITAL_OCEAN_DROPLETS, digitalOceanController.getDroplets);
             get(Endpoints.DIGITAL_OCEAN_DROPLET, digitalOceanController.getDroplet);

@@ -8,6 +8,7 @@ import kong.unirest.UnirestInstance;
 
 public class DigitalOceanController {
 
+    // See constructor for setup
     private UnirestInstance unirest;
 
     public Handler getDroplets = ctx -> {
@@ -39,12 +40,13 @@ public class DigitalOceanController {
     };
 
     public Handler createDroplet = ctx -> {
-//        HttpResponse<JsonNode> response = unirest.post("/droplets")
-//                .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
-//                .asJson();
-//
-//        ctx.header("Content-Type", "application/json");
-//        ctx.result(response.getBody().toString());
+        HttpResponse<JsonNode> response = unirest.post("/droplets")
+                .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
+                .body(ctx.body())
+                .asJson();
+
+        ctx.header("Content-Type", "application/json");
+        ctx.result(response.getBody().toString());
     };
 
     public Handler deleteDroplet = ctx -> {
@@ -61,7 +63,7 @@ public class DigitalOceanController {
         unirest = Unirest.spawnInstance();
         unirest.config()
                 .addShutdownHook(true)
-                .setDefaultHeader("accept", "application/json")
+                .setDefaultHeader("Accept", "application/json")
                 .defaultBaseUrl("https://api.digitalocean.com/v2");
     }
 }
