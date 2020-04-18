@@ -1,14 +1,20 @@
 package server.controllers;
 
 import io.javalin.http.Handler;
+import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
 import kong.unirest.UnirestInstance;
 
+/**
+ * Controller for handling the Digital Ocean RESTful API.
+ * The general structure of the different endpoint handlers is an HTTP-request using UniRest
+ * followed by a response via the Javalin server.
+ */
 public class DigitalOceanController {
 
-    // See constructor for setup
+    // See constructor below for configuration
     private UnirestInstance unirest;
 
     public Handler getDroplets = ctx -> {
@@ -16,6 +22,7 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
                 .asJson();
 
+        ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
     };
@@ -25,6 +32,7 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
                 .asJson();
 
+        ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
     };
@@ -35,6 +43,7 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
                 .asJson();
 
+        ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
     };
@@ -45,25 +54,26 @@ public class DigitalOceanController {
                 .body(ctx.body())
                 .asJson();
 
+        ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
     };
 
     public Handler deleteDroplet = ctx -> {
-        HttpResponse<JsonNode> response = unirest.delete("/droplets/{id}")
+        HttpResponse response = unirest.delete("/droplets/{id}")
                 .routeParam("id", ctx.pathParam("id"))
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
-                .asJson();
+                .asEmpty();
 
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getStatusText());
+        ctx.status(response.getStatus());
     };
 
     public DigitalOceanController() {
         unirest = Unirest.spawnInstance();
         unirest.config()
-                .addShutdownHook(true)
+                .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
                 .setDefaultHeader("Accept", "application/json")
+                .setDefaultHeader("test", "lol")
                 .defaultBaseUrl("https://api.digitalocean.com/v2");
     }
 }

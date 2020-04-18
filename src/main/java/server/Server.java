@@ -19,14 +19,13 @@ public class Server {
                     event.serverStopped(() -> Unirest.shutDown());
                 });
 
-        app.start(8080);
-
-        // Javalin error handling TODO: lav ordentligt
         app.exception(Exception.class, (e, ctx) -> {
             e.printStackTrace();
             ctx.result("Server error: " + e.toString());
         });
 
+        app.start(8080);
+        
         // Javalin REST endpoints
         app.routes(() -> {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
