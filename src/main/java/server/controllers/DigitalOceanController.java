@@ -1,11 +1,12 @@
 package server.controllers;
 
 import io.javalin.http.Handler;
-import io.javalin.http.NotFoundResponse;
-import kong.unirest.HttpResponse;
-import kong.unirest.JsonNode;
-import kong.unirest.Unirest;
-import kong.unirest.UnirestInstance;
+import kong.unirest.*;
+import test.Droplet;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 /**
  * Controller for handling the Digital Ocean RESTful API.
@@ -13,6 +14,8 @@ import kong.unirest.UnirestInstance;
  * followed by a response via the Javalin server.
  */
 public class DigitalOceanController {
+
+    File testDroplet = new File("C:\\Users\\Fars\\IdeaProjects\\RESTServer\\src\\main\\java\\test\\TestDroplet");
 
     // See constructor below for configuration
     private UnirestInstance unirest;
@@ -51,12 +54,14 @@ public class DigitalOceanController {
     public Handler createDroplet = ctx -> {
         HttpResponse<JsonNode> response = unirest.post("/droplets")
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
-                .body(ctx.body())
+                .body(new Droplet())
                 .asJson();
 
         ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        if (response.isSuccess()) {
+            ctx.result(response.getBody().toString());
+        }
     };
 
     public Handler deleteDroplet = ctx -> {
@@ -73,7 +78,7 @@ public class DigitalOceanController {
         unirest.config()
                 .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
                 .setDefaultHeader("Accept", "application/json")
-                .setDefaultHeader("test", "lol")
+                .setDefaultHeader("Content-Type", "application/json")
                 .defaultBaseUrl("https://api.digitalocean.com/v2");
     }
 }

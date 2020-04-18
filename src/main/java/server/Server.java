@@ -25,7 +25,7 @@ public class Server {
         });
 
         app.start(8080);
-        
+
         // Javalin REST endpoints
         app.routes(() -> {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
