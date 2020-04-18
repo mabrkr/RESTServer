@@ -15,8 +15,6 @@ import java.io.FileReader;
  */
 public class DigitalOceanController {
 
-    File testDroplet = new File("C:\\Users\\Fars\\IdeaProjects\\RESTServer\\src\\main\\java\\test\\TestDroplet");
-
     // See constructor below for configuration
     private UnirestInstance unirest;
 
