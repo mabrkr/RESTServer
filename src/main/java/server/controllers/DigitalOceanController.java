@@ -52,14 +52,12 @@ public class DigitalOceanController {
     public Handler createDroplet = ctx -> {
         HttpResponse<JsonNode> response = unirest.post("/droplets")
                 .header("Authorization", "Bearer 2f69ab747915383b38dd2a312aab11577c87ba12a873d3d5da8be86a07a68631")
-                .body(new Droplet())
+                .body(ctx.body())
                 .asJson();
 
         ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
-        if (response.isSuccess()) {
-            ctx.result(response.getBody().toString());
-        }
+        ctx.result(response.getBody().toString());
     };
 
     public Handler deleteDroplet = ctx -> {
