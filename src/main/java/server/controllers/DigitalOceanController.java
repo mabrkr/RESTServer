@@ -2,11 +2,6 @@ package server.controllers;
 
 import io.javalin.http.Handler;
 import kong.unirest.*;
-import test.Droplet;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 
 /**
  * Controller for handling the Digital Ocean RESTful API.
