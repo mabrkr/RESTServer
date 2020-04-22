@@ -3,12 +3,14 @@ package server;
 import io.javalin.Javalin;
 import kong.unirest.Unirest;
 import server.controllers.DigitalOceanController;
+import server.controllers.HetznerController;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
     private static DigitalOceanController digitalOceanController = new DigitalOceanController();
+    private static HetznerController hetznerController = new HetznerController();
 
     public static void main(String[] args) {
 
@@ -29,12 +31,18 @@ public class Server {
         // Javalin REST endpoints
         app.routes(() -> {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
+
             // TODO: endpoints til alt!
             get(Endpoints.DIGITAL_OCEAN_DROPLETS, digitalOceanController.getDroplets);
             get(Endpoints.DIGITAL_OCEAN_DROPLET, digitalOceanController.getDroplet);
             get(Endpoints.DIGITAL_OCEAN_ACCOUNT, digitalOceanController.getAccountInfo);
             post(Endpoints.DIGITAL_OCEAN_DROPLETS, digitalOceanController.createDroplet);
             delete(Endpoints.DIGITAL_OCEAN_DROPLET, digitalOceanController.deleteDroplet);
+
+            get(Endpoints.HETZNER_SERVERS, hetznerController.getServers);
+            get(Endpoints.HETZNER_SERVER, hetznerController.getServer);
+            post(Endpoints.HETZNER_SERVERS, hetznerController.createServer);
+            delete(Endpoints.HETZNER_SERVER, hetznerController.deleteServer);
         });
     }
 
@@ -43,5 +51,8 @@ public class Server {
         private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean/droplets";
         private static final String DIGITAL_OCEAN_DROPLET = "/digitalocean/droplets/:id";
         private static final String DIGITAL_OCEAN_ACCOUNT = "/digitalocean/account";
+
+        private static final String HETZNER_SERVERS = "/hetzner/servers";
+        private static final String HETZNER_SERVER = "/hetzner/servers/:id";
     }
 }
