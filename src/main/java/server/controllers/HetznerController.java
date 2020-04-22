@@ -3,6 +3,11 @@ package server.controllers;
 import io.javalin.http.Handler;
 import kong.unirest.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * Controller for handling the Digital Ocean RESTful API.
  * The general structure of the different endpoint handlers is an HTTP-request using UniRest
@@ -13,7 +18,8 @@ public class HetznerController {
     // See constructor below for configuration
     private UnirestInstance unirest;
 
-    private String token = "";
+    private File keyFile;
+    private String token;
 
     public Handler getServers = ctx -> {
         HttpResponse<JsonNode> response = unirest.get("/servers")
@@ -57,6 +63,13 @@ public class HetznerController {
     };
 
     public HetznerController() {
+        try {
+            keyFile = new File("..\\Auth\\hetznerkey.txt");
+            token = new BufferedReader(new FileReader(keyFile)).readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         unirest = Unirest.spawnInstance();
         unirest.config()
                 .addShutdownHook(true) // TODO: check perfomance vs manual shutdown

@@ -3,6 +3,11 @@ package server.controllers;
 import io.javalin.http.Handler;
 import kong.unirest.*;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * Controller for handling the Digital Ocean RESTful API.
  * The general structure of the different endpoint handlers is an HTTP-request using UniRest
@@ -13,7 +18,8 @@ public class DigitalOceanController {
     // See constructor below for configuration
     private UnirestInstance unirest;
 
-    private String token = "22a7b84dad407a5b0e1df42b7a636e5ee0fc263c0a85efb4c209b946761298b4";
+    private File keyFile;
+    private String token;
 
     public Handler getDroplets = ctx -> {
         HttpResponse<JsonNode> response = unirest.get("/droplets")
@@ -67,6 +73,13 @@ public class DigitalOceanController {
     };
 
     public DigitalOceanController() {
+        try {
+            keyFile = new File("..\\Auth\\digitaloceankey.txt");
+            token = new BufferedReader(new FileReader(keyFile)).readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         unirest = Unirest.spawnInstance();
         unirest.config()
                 .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
