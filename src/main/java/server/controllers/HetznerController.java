@@ -75,6 +75,6 @@ public class HetznerController {
                 .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
                 .setDefaultHeader("Accept", "application/json")
                 .setDefaultHeader("Content-Type", "application/json")
-                .defaultBaseUrl("https://api.hetzner.cloud/v1/");
+                .defaultBaseUrl("https://api.hetzner.cloud/v1");
     }
 }
