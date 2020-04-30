@@ -1,5 +1,6 @@
 package server;
 
+import DAO.DatabaseConnection;
 import io.javalin.Javalin;
 import kong.unirest.Unirest;
 import server.controllers.DigitalOceanController;
@@ -11,6 +12,8 @@ public class Server {
 
     private static DigitalOceanController digitalOceanController = new DigitalOceanController();
     private static HetznerController hetznerController = new HetznerController();
+
+    private DatabaseConnection database = new DatabaseConnection();
 
     public static void main(String[] args) {
 
@@ -48,6 +51,11 @@ public class Server {
 
     // Container for endpoint URLs
     private static class Endpoints {
+        private static final String SESSION_TOKENS = "/sessions";
+
+        private static final String USERS = "/users";
+        private static final String USERS_APIKEY = "/users/:id";
+
         private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean/droplets";
         private static final String DIGITAL_OCEAN_DROPLET = "/digitalocean/droplets/:id";
         private static final String DIGITAL_OCEAN_ACCOUNT = "/digitalocean/account";
