@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     private static Connection conn;
 
-    private static Connection getConnection() { // TODO: Burde den være synchronized?
+    public static Connection getConnection() { // TODO: Burde den være synchronized?
         try {
             if (conn == null || conn.isClosed()) {
                 String hostname = "127.0.0.1:3306/?serverTimezone=UTC#";
