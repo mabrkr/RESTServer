@@ -1,21 +1,26 @@
 package server.controllers;
 
-import DAO.DatabaseConnection;
+import DAL.DatabaseController;
 import io.javalin.http.Handler;
 
 public class SessionController {
 
-    private DatabaseConnection database;
+    private DatabaseController database;
 
     public Handler login = ctx -> {
-
+        /*
+        * Tjek brugernavn + kodeord i database. Hvis ja: generer token og put den i database og returner den.
+        * Hvis nej: returner passende fejlkode.
+        */
     };
 
     public Handler logout = ctx -> {
-
+        /*
+        * Slet token i databasen og returner 204. Tokens skal måske udløbe automatisk efter et stykke tid?
+        */
     };
 
-    public SessionController(DatabaseConnection database) {
+    public SessionController(DatabaseController database) {
         this.database = database;
     }
 }

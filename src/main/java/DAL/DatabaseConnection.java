@@ -1,4 +1,4 @@
-package DAO;
+package DAL;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     private static Connection conn;
 
-    public static Connection getConnection() { // TODO: Burde den være synchronized?
+    public static Connection getConnection() { // TODO: Burde den (eller conn) være synchronized eller async på anden vis?
         try {
             if (conn == null || conn.isClosed()) {
                 String hostname = "127.0.0.1:3306/?serverTimezone=UTC#";

@@ -1,6 +1,6 @@
 package server;
 
-import DAO.DatabaseConnection;
+import DAL.DatabaseController;
 import io.javalin.Javalin;
 import kong.unirest.Unirest;
 import server.controllers.DigitalOceanController;
@@ -12,12 +12,12 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
-    private static DatabaseConnection database = new DatabaseConnection();
+    private static DatabaseController databaseController = new DatabaseController();
 
     private static DigitalOceanController digitalOceanController = new DigitalOceanController();
     private static HetznerController hetznerController = new HetznerController();
-    private static SessionController sessionController = new SessionController(database);
-    private static UserController userController = new UserController(database);
+    private static SessionController sessionController = new SessionController(databaseController);
+    private static UserController userController = new UserController(databaseController);
 
     public static void main(String[] args) {
 
@@ -41,7 +41,7 @@ public class Server {
 
             // TODO: endpoints til alt!
             post(Endpoints.SESSION_TOKENS, sessionController.login);
-            delete(Endpoints.SESSION_TOKENS, sessionController.logout);
+            delete(Endpoints.SESSION_TOKEN, sessionController.logout);
 
             get(Endpoints.USER, userController.getUser);
             post(Endpoints.USERS, userController.newUser);
@@ -63,6 +63,7 @@ public class Server {
     // Container for endpoint URLs
     private static class Endpoints {
         private static final String SESSION_TOKENS = "/sessions";
+        private static final String SESSION_TOKEN = "/sessions/:token";
 
         private static final String USERS = "/users";
         private static final String USER = "/users/:id";
