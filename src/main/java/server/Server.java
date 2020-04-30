@@ -12,6 +12,8 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
+
+
     private static DigitalOceanController digitalOceanController = new DigitalOceanController();
     private static HetznerController hetznerController = new HetznerController();
     private static SessionController sessionController = new SessionController();
@@ -41,6 +43,7 @@ public class Server {
             post(Endpoints.SESSION_TOKENS, sessionController.login);
             delete(Endpoints.SESSION_TOKENS, sessionController.logout);
 
+            get(Endpoints.USER, userController.getUser);
             post(Endpoints.USERS, userController.newUser);
             put(Endpoints.USER, userController.updateUser);
 
