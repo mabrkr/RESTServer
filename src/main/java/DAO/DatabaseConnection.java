@@ -24,7 +24,7 @@ public class DatabaseConnection {
         String hostname = "127.0.0.1:3306/?serverTimezone=UTC#";
         String db = "zadmin_dist";
         String username = "root";
-        String passwordx = "testtest";
+        String passwordx = "mysql";
         Connection conn = null;
 
 
