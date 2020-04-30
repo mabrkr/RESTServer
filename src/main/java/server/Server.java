@@ -12,12 +12,12 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
-
+    private static DatabaseConnection database = new DatabaseConnection();
 
     private static DigitalOceanController digitalOceanController = new DigitalOceanController();
     private static HetznerController hetznerController = new HetznerController();
-    private static SessionController sessionController = new SessionController();
-    private static UserController userController = new UserController();
+    private static SessionController sessionController = new SessionController(database);
+    private static UserController userController = new UserController(database);
 
     public static void main(String[] args) {
 
