@@ -1,6 +1,5 @@
 package server.controllers;
 
-import DAL.DatabaseController;
 import io.javalin.http.Handler;
 
 public class SessionController {

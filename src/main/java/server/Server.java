@@ -1,6 +1,5 @@
 package server;
 
-import DAL.DatabaseController;
 import io.javalin.Javalin;
 import kong.unirest.Unirest;
 import server.controllers.DigitalOceanController;
@@ -25,11 +24,13 @@ public class Server {
         userController = new UserController();
 
         // Javalin server setup
-        Javalin app = Javalin.create(config ->
-                config.enableCorsForAllOrigins())
-                .events(event -> {
-                    event.serverStopped(() -> Unirest.shutDown());
-                });
+        Javalin app = Javalin.create();
+
+        app.config.enableCorsForAllOrigins();
+
+        app.events(event -> {
+            event.serverStopped(() -> Unirest.shutDown());
+        });
 
         app.exception(Exception.class, (e, ctx) -> {
             e.printStackTrace();
@@ -41,8 +42,6 @@ public class Server {
         // Javalin REST endpoints
         app.routes(() -> {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
-
-            // TODO: endpoints til alt!
             post(Endpoints.SESSION_TOKENS, sessionController.login);
             delete(Endpoints.SESSION_TOKEN, sessionController.logout);
 
