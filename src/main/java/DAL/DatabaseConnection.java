@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 
-public class DatabaseConnection {
+class DatabaseConnection {
 
     private Connection conn;
 
@@ -36,9 +36,6 @@ public class DatabaseConnection {
         try {
             if (conn == null || conn.isClosed()) {
                 String hostname = "127.0.0.1:3306/?serverTimezone=UTC#";
-                String db = "zadmin_dist";
-                String user = "root";
-                String password = "mysql";
                 String dataBase = "jdbc:mysql://" + hostname + "/" + db;
                 conn = DriverManager.getConnection(dataBase, user, password);
             }

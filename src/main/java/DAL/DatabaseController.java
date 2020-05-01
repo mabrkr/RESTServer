@@ -5,12 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DatabaseController {
+public final class DatabaseController {
+
+    private static volatile DatabaseController instance = null;
 
     private DatabaseConnection databaseConnection;
 
-    public DatabaseController() {
+    private DatabaseController() {
         databaseConnection = new DatabaseConnection();
+    }
+
+    // https://en.wikipedia.org/wiki/Singleton_pattern#Lazy_initialization
+    public static DatabaseController getInstance() {
+        if (instance == null) {
+            synchronized (DatabaseController.class) {
+                if (instance == null) {
+                    instance = new DatabaseController();
+                }
+            }
+        }
+
+        return instance;
     }
 
     public void eksempelMetode() {

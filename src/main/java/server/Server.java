@@ -12,7 +12,6 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
-    private static DatabaseController databaseController;
     private static DigitalOceanController digitalOceanController;
     private static HetznerController hetznerController;
     private static SessionController sessionController ;
@@ -20,11 +19,10 @@ public class Server {
 
     public static void main(String[] args) {
 
-        databaseController = new DatabaseController();
         digitalOceanController = new DigitalOceanController();
         hetznerController = new HetznerController();
-        sessionController = new SessionController(databaseController);
-        userController = new UserController(databaseController);
+        sessionController = new SessionController();
+        userController = new UserController();
 
         // Javalin server setup
         Javalin app = Javalin.create(config ->

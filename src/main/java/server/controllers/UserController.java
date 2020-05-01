@@ -5,8 +5,6 @@ import io.javalin.http.Handler;
 
 public class UserController {
 
-    private DatabaseController database;
-
     public Handler getUser = ctx -> {
         // Hent brugerdata fra database og returner
     };
@@ -18,8 +16,4 @@ public class UserController {
     public Handler updateUser = ctx -> {
         // Opdater bruger. Relevant ift. skift af kodeord og indtastning af API-nøgler
     };
-
-    public UserController(DatabaseController database) {
-        this.database = database;
-    }
 }
