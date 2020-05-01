@@ -7,8 +7,14 @@ import java.sql.SQLException;
 
 public class DatabaseController {
 
+    private DatabaseConnection databaseConnection;
+
+    public DatabaseController() {
+        databaseConnection = new DatabaseConnection();
+    }
+
     public void eksempelMetode() {
-        try (Connection connection = DatabaseConnection.getConnection()){
+        try (Connection connection = databaseConnection.getConnection()){
             /*
             * TODO: Denne tilgang lukker db-forbindelse efter metode-kaldet, er det smart?
             * Måske ikke hvis databasen skal bruges hele tiden...

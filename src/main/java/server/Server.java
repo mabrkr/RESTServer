@@ -12,14 +12,19 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Server {
 
-    private static DatabaseController databaseController = new DatabaseController();
-
-    private static DigitalOceanController digitalOceanController = new DigitalOceanController();
-    private static HetznerController hetznerController = new HetznerController();
-    private static SessionController sessionController = new SessionController(databaseController);
-    private static UserController userController = new UserController(databaseController);
+    private static DatabaseController databaseController;
+    private static DigitalOceanController digitalOceanController;
+    private static HetznerController hetznerController;
+    private static SessionController sessionController ;
+    private static UserController userController;
 
     public static void main(String[] args) {
+
+        databaseController = new DatabaseController();
+        digitalOceanController = new DigitalOceanController();
+        hetznerController = new HetznerController();
+        sessionController = new SessionController(databaseController);
+        userController = new UserController(databaseController);
 
         // Javalin server setup
         Javalin app = Javalin.create(config ->
