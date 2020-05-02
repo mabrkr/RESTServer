@@ -32,11 +32,12 @@ class DatabaseConnection {
         password = tempPassword;
     }
 
-    Connection getConnection() { // TODO: Burde den (eller conn) være synchronized eller async på anden vis?
+    Connection getConnection() {
         try {
             if (conn == null || conn.isClosed()) {
-                String hostname = "127.0.0.1:3306/?serverTimezone=UTC#";
-                String dataBase = "jdbc:mysql://" + hostname + "/" + db;
+                String hostname = "127.0.0.1:3306";
+                String timezone = "?serverTimezone=UTC";
+                String dataBase = "jdbc:mysql://" + hostname + "/" + db + timezone;
                 conn = DriverManager.getConnection(dataBase, user, password);
             }
         } catch (SQLException e) {

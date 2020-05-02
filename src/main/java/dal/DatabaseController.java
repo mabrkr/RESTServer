@@ -49,14 +49,14 @@ public final class DatabaseController {
 
         try (Connection connection = databaseConnection.getConnection()){
             connection.setAutoCommit(false);
-            String statement = "SELECT COUNT(*) FROM users WHERE username=? AND password=?";
+            String statement = "SELECT * FROM users WHERE username=? AND password=?";
             PreparedStatement ps = connection.prepareStatement(statement);
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
 
-            // Check if non-empty result set has been returned, i.e. the user-password-combo exists
-            if (!rs.isBeforeFirst()) {
+            // isBeforeFirst is false if the result set is empty, i.e. the user-password-combo does not exist
+            if (rs.isBeforeFirst()) {
                 doesUserExist = true;
             }
 
@@ -67,7 +67,6 @@ public final class DatabaseController {
         return doesUserExist;
     }
 
-    // TODO: skal bruge UserDTO?
     public boolean createNewUser(String username, String email, String password) throws DatabaseException {
         boolean isUserCreated = false;
 

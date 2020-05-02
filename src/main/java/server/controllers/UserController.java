@@ -15,4 +15,7 @@ public class UserController {
     public Handler updateUser = ctx -> {
         // Opdater bruger. Relevant ift. skift af kodeord og indtastning af API-nøgler
     };
+    public Handler addApiKey = ctx -> {
+
+    };
 }
