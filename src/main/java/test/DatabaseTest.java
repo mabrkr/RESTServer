@@ -1,6 +1,6 @@
 package test;
 
-import dal.DatabaseController;
+import DAL.DatabaseController;
 
 public class DatabaseTest {
 

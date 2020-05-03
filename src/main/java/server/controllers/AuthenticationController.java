@@ -1,7 +1,7 @@
 package server.controllers;
 
-import dal.DatabaseController;
-import dal.DatabaseException;
+import DAL.DatabaseController;
+import DAL.DatabaseException;
 import io.javalin.http.Handler;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.UnauthorizedResponse;

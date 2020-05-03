@@ -1,4 +1,4 @@
-package dal;
+package DAL;
 
 import java.io.*;
 import java.sql.*;
