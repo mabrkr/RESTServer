@@ -3,7 +3,7 @@ package DALleValle;
 public class DatabaseException extends Exception {
 
     public DatabaseException(String errorMessage, Throwable e) {
-        super(errorMessage,e);
+        super(errorMessage, e);
     }
 
     public DatabaseException(String errorMessage) {

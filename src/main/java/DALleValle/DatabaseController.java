@@ -44,7 +44,8 @@ public final class DatabaseController {
     }
 
     public boolean authenticateUser(String username, String password) throws DatabaseException {
-        boolean doesUserExist = false;
+        boolean doesUsernamePasswordComboExist = false;
+
         String statement = "SELECT * FROM users WHERE username=? AND password=?";
 
         try (Connection connection = databaseConnection.getConnection();
@@ -54,35 +55,39 @@ public final class DatabaseController {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
 
-            // isBeforeFirst is false if the result set is empty, i.e. the user-password-combo does not exist
+            // isBeforeFirst is true if the result set is non-empty, i.e. the user-password-combo exists
             if (rs.isBeforeFirst()) {
-                doesUserExist = true;
+                doesUsernamePasswordComboExist = true;
             }
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error", e);
         }
 
-        return doesUserExist;
+        return doesUsernamePasswordComboExist;
     }
 
     // TODO: inputvalidering, findes bruger allerede etc.
-    public boolean createNewUser(String username, String email, String password) throws DatabaseException {
+    public boolean createNewUser(UserDTO user) throws DatabaseException {
         boolean isUserCreated = false;
 
-        try (Connection connection = databaseConnection.getConnection()){
+        String statement = "INSERT INTO users (username, email, password) VALUES (?,?,?)";
+
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement)) {
+
             connection.setAutoCommit(false);
-            String statement = "INSERT INTO users (username, email, password) VALUES (?,?,?)";
-            PreparedStatement ps = connection.prepareStatement(statement);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, password);
+
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
 
             int updatedRows = ps.executeUpdate();
 
             if (updatedRows == 0) {
                 isUserCreated = false;
             } else {
+                connection.commit();
                 isUserCreated = true;
             }
 
@@ -91,5 +96,69 @@ public final class DatabaseController {
         }
 
         return isUserCreated;
+    }
+
+    public boolean updateUser(UserDTO user) throws DatabaseException {
+        boolean isUserUpdated = false;
+
+        String statement = "UPDATE users SET email=?, password=? WHERE username=?";
+
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement)) {
+
+            connection.setAutoCommit(false);
+
+            ps.setString(1, user.getEmail());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getUsername());
+
+            int updatedRows = ps.executeUpdate();
+
+            if (updatedRows == 0) {
+                isUserUpdated = false;
+            } else {
+                connection.commit();
+                isUserUpdated = true;
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error", e);
+        }
+
+        return isUserUpdated;
+    }
+
+    public UserDTO getUser(String username) throws DatabaseException {
+        UserDTO user;
+
+        String statement = "SELECT username, email, password, service_company, service_apikey " +
+                "FROM users INNER JOIN api_keys ON users.ID = api_keys.userid " +
+                "WHERE apikey_status ='live' AND username = ?";
+
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement)) {
+
+            connection.setAutoCommit(false);
+
+            ps.setString(1, username);
+
+            ResultSet rs = ps.executeQuery();
+
+            rs.next();
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            user = new UserDTO(username, email, password);
+            user.addApikey(rs.getString("service_company"), rs.getString("service_apikey"));
+
+            // Add the rest of the API keys
+            while (rs.next()) {
+                user.addApikey(rs.getString("service_company"), rs.getString("service_apikey"));
+            }
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error", e);
+        }
+
+        return user;
     }
 }

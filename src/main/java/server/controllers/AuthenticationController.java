@@ -21,7 +21,7 @@ public class AuthenticationController {
                 throw new UnauthorizedResponse("Wrong username and/or password");
             }
         } catch (DatabaseException e) {
-            throw new InternalServerErrorResponse("Server database error.");
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
         }
     };
 
