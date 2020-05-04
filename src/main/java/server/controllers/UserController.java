@@ -1,21 +1,49 @@
 package server.controllers;
 
+import DALleValle.DatabaseController;
+import DALleValle.DatabaseException;
+import DALleValle.UserDTO;
 import io.javalin.http.Handler;
+import io.javalin.http.InternalServerErrorResponse;
 
 public class UserController {
 
     public Handler getUser = ctx -> {
-        // Hent brugerdata fra database og returner.
+        UserDTO user;
+
+        try {
+            String username = ctx.pathParam("username");
+            user = DatabaseController.getInstance().getUser(username);
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
+        ctx.status(200);
+        ctx.header("Content-Type", "application/json");
+        // TODO: skal password sendes med her?
+        ctx.json(user);
     };
 
     public Handler newUser = ctx -> {
-        // Opret ny bruger i databasen.
+        try {
+
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
     };
 
     public Handler updateUser = ctx -> {
-        // Opdater bruger. Relevant ift. skift af kodeord.
+        try {
+
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
     };
     public Handler addApiKey = ctx -> {
-        // Tilføj api nøgle til bruger. Request body skal indeholde nødvendig info (host/registrar og nøgle).
+        try {
+
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
     };
 }

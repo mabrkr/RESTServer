@@ -128,6 +128,7 @@ public final class DatabaseController {
         return isUserUpdated;
     }
 
+    // TODO: findes brugeren?
     public UserDTO getUser(String username) throws DatabaseException {
         UserDTO user;
 
