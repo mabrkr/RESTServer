@@ -1,4 +1,4 @@
-package DAL;
+package DALleValle;
 
 public class DatabaseException extends Exception {
 

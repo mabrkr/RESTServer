@@ -1,6 +1,6 @@
 package test;
 
-import DAL.DatabaseController;
+import DALleValle.DatabaseController;
 
 public class DatabaseTest {
 

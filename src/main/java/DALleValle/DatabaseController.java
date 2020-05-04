@@ -1,4 +1,4 @@
-package DAL;
+package DALleValle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,15 +29,14 @@ public final class DatabaseController {
     }
 
     public void eksempelMetode() {
-        try (Connection connection = databaseConnection.getConnection()){
-            /*
-            * TODO: Denne tilgang lukker db-forbindelse efter metode-kaldet, er det smart?
-            */
+        try (Connection connection = databaseConnection.getConnection();
+             /*
+             * TODO: Denne tilgang lukker db-forbindelse efter metode-kaldet, er det smart?
+             */
+             PreparedStatement ps = connection.prepareStatement("")){
 
-            connection.setAutoCommit(false);
-
-            PreparedStatement ps = connection.prepareStatement("");
             ResultSet rs = ps.executeQuery();
+            // Do something
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,11 +45,11 @@ public final class DatabaseController {
 
     public boolean authenticateUser(String username, String password) throws DatabaseException {
         boolean doesUserExist = false;
+        String statement = "SELECT * FROM users WHERE username=? AND password=?";
 
-        try (Connection connection = databaseConnection.getConnection()){
-            connection.setAutoCommit(false);
-            String statement = "SELECT * FROM users WHERE username=? AND password=?";
-            PreparedStatement ps = connection.prepareStatement(statement);
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement)) {
+
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
