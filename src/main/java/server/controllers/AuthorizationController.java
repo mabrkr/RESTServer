@@ -6,9 +6,9 @@ import io.javalin.http.Handler;
 import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.http.UnauthorizedResponse;
 
-public class AuthenticationController {
+public class AuthorizationController {
 
-    public Handler authenticate = ctx -> {
+    public Handler authorize = ctx -> {
         try {
             if (!ctx.basicAuthCredentialsExist()) {
                 throw new UnauthorizedResponse("No authorization credentials found.");

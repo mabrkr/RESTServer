@@ -10,14 +10,14 @@ public class Server {
 
     private static DigitalOceanController digitalOceanController;
     private static HetznerController hetznerController;
-    private static AuthenticationController authenticationController ;
+    private static AuthorizationController authorizationController;
     private static UserController userController;
 
     public static void main(String[] args) {
 
         digitalOceanController = new DigitalOceanController();
         hetznerController = new HetznerController();
-        authenticationController = new AuthenticationController();
+        authorizationController = new AuthorizationController();
         userController = new UserController();
 
         // Javalin server setup
@@ -39,12 +39,12 @@ public class Server {
         // Javalin REST endpoints
         app.routes(() -> {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
-            before("/digitalocean/*", authenticationController.authenticate);
-            before("/hetzner/*", authenticationController.authenticate);
-            before("/users/*", authenticationController.authenticate);
+            before("/digitalocean/*", authorizationController.authorize);
+            before("/hetzner/*", authorizationController.authorize);
+            before("/users/*", authorizationController.authorize);
 
-            post(Endpoints.SESSION_TOKENS, authenticationController.login);
-            delete(Endpoints.SESSION_TOKEN, authenticationController.logout);
+            post(Endpoints.SESSION_TOKENS, authorizationController.login);
+            delete(Endpoints.SESSION_TOKEN, authorizationController.logout);
 
             get(Endpoints.USER, userController.getUser);
             post(Endpoints.USER_API_KEYS, userController.addApiKey);

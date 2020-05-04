@@ -25,25 +25,25 @@ public class UserController {
     };
 
     public Handler newUser = ctx -> {
-        try {
-
-        } catch (DatabaseException e) {
-            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-        }
+//        try {
+//
+//        } catch (DatabaseException e) {
+//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+//        }
     };
 
     public Handler updateUser = ctx -> {
-        try {
-
-        } catch (DatabaseException e) {
-            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-        }
+//        try {
+//
+//        } catch (DatabaseException e) {
+//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+//        }
     };
     public Handler addApiKey = ctx -> {
-        try {
-
-        } catch (DatabaseException e) {
-            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-        }
+//        try {
+//
+//        } catch (DatabaseException e) {
+//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+//        }
     };
 }
