@@ -1,13 +1,13 @@
 package DALleValle;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class UserDTO {
 
     private String username;
     private String email;
     private String password;
-    private HashMap<String, String> apikeys;
+    private ArrayList<ApiKeyDTO> apikeys;
 
     public UserDTO(String username, String email, String password) {
 
@@ -15,11 +15,11 @@ public class UserDTO {
         this.email = email;
         this.password = password;
 
-        apikeys = new HashMap<>();
+        apikeys = new ArrayList<>();
     }
 
-    public void addApikey(String service, String key) {
-        apikeys.put(service, key);
+    public void addApikey(ApiKeyDTO key) {
+        apikeys.add(key);
     }
 
     public String getUsername() {
@@ -34,7 +34,7 @@ public class UserDTO {
         return password;
     }
 
-    public HashMap<String, String> getApikeys() {
+    public ArrayList<ApiKeyDTO> getApikeys() {
         return apikeys;
     }
 }
