@@ -1,8 +1,8 @@
 package server.controllers;
 
-import DALleValle.DatabaseController;
-import DALleValle.DatabaseException;
-import DALleValle.UserDTO;
+import dal.DatabaseController;
+import dal.DatabaseException;
+import dal.UserDTO;
 import io.javalin.http.Handler;
 import io.javalin.http.InternalServerErrorResponse;
 

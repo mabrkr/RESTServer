@@ -1,4 +1,4 @@
-package DALleValle;
+package dal;
 
 import java.util.ArrayList;
 

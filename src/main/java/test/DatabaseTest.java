@@ -1,41 +1,48 @@
 package test;
 
-import DALleValle.DatabaseController;
-import DALleValle.UserDTO;
-
-import java.util.HashMap;
+import dal.ApiKeyDTO;
+import dal.DatabaseController;
+import dal.UserDTO;
 
 public class DatabaseTest {
 
     public static void main(String[] args) throws Exception {
-//        boolean result1 = DatabaseController.getInstance().authenticateUser("lol","lol");
-//        System.out.println(result1);
-//
-//        boolean result2 = DatabaseController.getInstance().authenticateUser("SouthStruds", "MalteMalte");
-//        System.out.println(result2);
+        UserDTO user;
 
-//        HashMap<String, String> keys = new HashMap<>();
-//        keys.put("asdf", "1234");
-//        keys.put("qwerty", "4321");
-//        boolean result6 = DatabaseController.getInstance().updateApiKeys("haha", keys);
-//        System.out.println(result6);
+        DatabaseController.getInstance().createNewUser(new UserDTO("haha", "hehe", "hoho"));
 
-        UserDTO result3 = DatabaseController.getInstance().getUser("SouthStruds");
-        System.out.println(result3.getUsername());
-        System.out.println(result3.getEmail());
-        System.out.println(result3.getPassword());
-        System.out.println(result3.getApikeys());
+        user = DatabaseController.getInstance().getUser("haha");
+        System.out.println(user.getUsername());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+        System.out.println(user.getApikeys());
+        System.out.println();
 
-//        UserDTO user1 = new UserDTO("haha", "hehe", "hoho");
-//        user1.addApikey("lol", "rofl");
-//        boolean result4 = DatabaseController.getInstance().createNewUser(user1);
-//        System.out.println(result4);
-//        UserDTO result5 = DatabaseController.getInstance().getUser("SouthStruds");
-//        System.out.println(result5.getUsername());
-//        System.out.println(result5.getEmail());
-//        System.out.println(result5.getPassword());
-//        System.out.println(result5.getApikeys());
+        DatabaseController.getInstance().updateUser(new UserDTO("haha", "hehe", "hihi"));
 
+        user = DatabaseController.getInstance().getUser("haha");
+        System.out.println(user.getUsername());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+        System.out.println(user.getApikeys());
+        System.out.println();
 
+        DatabaseController.getInstance().createOrUpdateApiKey("haha", new ApiKeyDTO("key", "username", "company", "email"));
+
+        user = DatabaseController.getInstance().getUser("haha");
+        System.out.println(user.getUsername());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+        System.out.println(user.getApikeys());
+        System.out.println();
+
+        DatabaseController.getInstance().createOrUpdateApiKey("haha", new ApiKeyDTO("key", "username", "company", "email"));
+
+        user = DatabaseController.getInstance().getUser("haha");
+        System.out.println(user.getUsername());
+        System.out.println(user.getEmail());
+        System.out.println(user.getPassword());
+        System.out.println(user.getApikeys());
+        System.out.println();
     }
 }

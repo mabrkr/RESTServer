@@ -1,11 +1,6 @@
-package DALleValle;
+package dal;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.*;
 
 public final class DatabaseController {
 
@@ -55,11 +50,10 @@ public final class DatabaseController {
     }
 
     /**
-     * Checks if a user exists in the database.
-     * @param username is the relevant parameter.
+     * Checks if a user exists in the database (by username).
      * @return Returns -1 if the user does not exist. Otherwise returns the user's ID.
      */
-    public int checkIfUserExists(String username) throws DatabaseException {
+    private int checkIfUserExists(String username) throws DatabaseException {
         int userId = -1;
 
         String statement = "SELECT ID FROM users WHERE username=?";
@@ -86,12 +80,10 @@ public final class DatabaseController {
         return userId;
     }
 
-    public boolean createNewUser(UserDTO user) throws DatabaseException, UsernameTakenException {
+    public void createNewUser(UserDTO user) throws DatabaseException, UsernameTakenException {
         if (checkIfUserExists(user.getUsername()) != -1) {
             throw new UsernameTakenException("Username is taken.");
         }
-
-        boolean isUserCreated = false;
 
         String statement = "INSERT INTO users (username, email, password) VALUES (?,?,?)";
 
@@ -104,27 +96,21 @@ public final class DatabaseController {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPassword());
 
-            int updatedRows = ps.executeUpdate();
+            ps.executeUpdate();
 
-            if (updatedRows == 0) {
-                isUserCreated = false;
-            } else {
-                connection.commit();
-                isUserCreated = true;
-            }
+            connection.commit();
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error", e);
         }
-
-        return isUserCreated;
     }
 
-    /* It is already implicitly tested whether the user exists or not as long as the endpoint that uses this method
-    calls the authenticateUser method first (which it probably should) */
-    public boolean updateUser(UserDTO user) throws DatabaseException {
-        boolean isUserUpdated = false;
-
+    /**
+     * Updates a user in the database (by username, i.e. email and password can be changed).
+     * It is already implicitly tested whether the user exists or not as long as the endpoint that uses this method
+     * calls the authenticateUser method first (which it probably always should).
+     */
+    public void updateUser(UserDTO user) throws DatabaseException {
         String statement = "UPDATE users SET email=?, password=? WHERE username=?";
 
         try (Connection connection = databaseConnection.getConnection();
@@ -136,24 +122,20 @@ public final class DatabaseController {
             ps.setString(2, user.getPassword());
             ps.setString(3, user.getUsername());
 
-            int updatedRows = ps.executeUpdate();
+            ps.executeUpdate();
 
-            if (updatedRows == 0) {
-                isUserUpdated = false;
-            } else {
-                connection.commit();
-                isUserUpdated = true;
-            }
+            connection.commit();
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error", e);
         }
-
-        return isUserUpdated;
     }
 
-    /* It is already implicitly tested whether the user exists or not as long as the endpoint that uses this method
-    calls the authenticateUser method first (which it probably should) */
+    /**
+     * Get a user in the database (by username).
+     * It is already implicitly tested whether the user exists or not as long as the endpoint that uses this method
+     * calls the authenticateUser method first (which it probably always should).
+     */
     public UserDTO getUser(String username) throws DatabaseException {
         UserDTO user;
 
@@ -203,40 +185,76 @@ public final class DatabaseController {
         return user;
     }
 
-    // TODO: Set old key to inactive (if it exists) and new to live
-    // SET USER ID FOR KEYS MANUALLY
-    // SET DATE CREATED MANUALLY this.date_created = new Date(System.currentTimeMillis()); // Does this cause problems once deployed?
-    public boolean updateApiKeys(String username, HashMap<String, String> keys) throws DatabaseException {
-        boolean areApiKeysUpdated = false;
-        int userID = checkIfUserExists(username);
-        int numberOfUpdatedRows = 0;
+    /**
+     * Checks whether the given user already has a key with the given service provider/company and updates
+     * or creates the key accordingly. An update sets the old key's status to 'invalid' and creates a new key.
+     * The service provider name is not validated here and therefore probably should be at application level.
+     */
+    public void createOrUpdateApiKey(String username, ApiKeyDTO key) throws DatabaseException {
+        int userId = checkIfUserExists(username);
+        UserDTO user = getUser(username);
 
-        String statement = "INSERT INTO api_keys (userid, service_company, service_apikey, apikey_status) VALUES (?,?,?)";
+        boolean doesActiveKeyAlreadyExist = false;
+
+        for (ApiKeyDTO existingKey : user.getApikeys()) {
+            if (existingKey.getService_company().equalsIgnoreCase(key.getService_company())) {
+                doesActiveKeyAlreadyExist = true;
+            }
+        }
+
+        if (doesActiveKeyAlreadyExist == true) {
+            updateApiKey(userId, key);
+        } else {
+            createApiKey(userId, key);
+        }
+    }
+
+    private void updateApiKey(int userId, ApiKeyDTO key) throws DatabaseException {
+        String statement = "UPDATE api_keys SET apikey_status='invalid' WHERE userid=? AND service_company=?";
 
         try (Connection connection = databaseConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(statement)) {
 
             connection.setAutoCommit(false);
 
-            // No validation of the service provider name here means that it probably should happen at application level
-            for (Map.Entry<String, String> entry : keys.entrySet()) {
-                ps.setInt(1, userID);
-                ps.setString(2, entry.getKey());
-                ps.setString(3, entry.getValue());
-                ps.executeUpdate();
-                numberOfUpdatedRows ++;
-            }
+            ps.setInt(1, userId);
+            ps.setString(2, key.getService_company());
 
-            if (numberOfUpdatedRows != 0) {
-                areApiKeysUpdated = true;
-            }
+            ps.executeUpdate();
+
+            connection.commit();
+
+            /* Breaking this up into two commits technically violates ACID, but that shouldn't become
+            relevant, unless the same user has two open sessions and is updating API keys on both at the same time. */
+            createApiKey(userId, key);
+
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error", e);
+        }
+    }
+
+    private void createApiKey(int userId, ApiKeyDTO key) throws DatabaseException {
+        String statement = "INSERT INTO api_keys (userid, service_apikey, service_username, service_company, " +
+                "date_created, service_email, apikey_status) VALUES (?,?,?,?,?,?,'live')";
+
+        try (Connection connection = databaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(statement)) {
+
+            connection.setAutoCommit(false);
+
+            ps.setInt(1, userId);
+            ps.setString(2, key.getService_apikey());
+            ps.setString(3, key.getService_username());
+            ps.setString(4, key.getService_company());
+            ps.setDate(5, new Date(System.currentTimeMillis())); // Does this cause problems once deployed?
+            ps.setString(6, key.getService_email());
+
+            ps.executeUpdate();
 
             connection.commit();
 
         } catch (SQLException e) {
             throw new DatabaseException("Database error", e);
         }
-
-        return areApiKeysUpdated;
     }
 }

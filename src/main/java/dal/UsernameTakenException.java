@@ -1,4 +1,4 @@
-package DALleValle;
+package dal;
 
 public class UsernameTakenException extends Exception {
 
