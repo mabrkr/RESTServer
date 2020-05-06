@@ -18,12 +18,11 @@ public class HetznerController {
     // See constructor below for configuration
     private UnirestInstance unirest;
 
-    private File keyFile;
-    private String token;
-
     public Handler getServers = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.get("/servers")
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer " + key)
                 .asJson();
 
         ctx.status(response.getStatus());
@@ -32,9 +31,11 @@ public class HetznerController {
     };
 
     public Handler getServer = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.get("/servers/{id}")
                 .routeParam("id", ctx.pathParam("id"))
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer " + key)
                 .asJson();
 
         ctx.status(response.getStatus());
@@ -43,8 +44,10 @@ public class HetznerController {
     };
 
     public Handler createServer = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.post("/servers")
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer " + key)
                 .body(ctx.body())
                 .asJson();
 
@@ -54,25 +57,20 @@ public class HetznerController {
     };
 
     public Handler deleteServer = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse response = unirest.delete("/servers/{id}")
                 .routeParam("id", ctx.pathParam("id"))
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer " + key)
                 .asEmpty();
 
         ctx.status(response.getStatus());
     };
 
     public HetznerController() {
-        try {
-            keyFile = new File("..\\Auth\\hetznerkey.txt");
-            token = new BufferedReader(new FileReader(keyFile)).readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         unirest = Unirest.spawnInstance();
         unirest.config()
-                .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
+                .addShutdownHook(true)
                 .setDefaultHeader("Accept", "application/json")
                 .setDefaultHeader("Content-Type", "application/json")
                 .defaultBaseUrl("https://api.hetzner.cloud/v1");

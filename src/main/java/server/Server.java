@@ -29,10 +29,10 @@ public class Server {
             event.serverStopped(() -> Unirest.shutDown());
         });
 
-        app.exception(Exception.class, (e, ctx) -> {
-            e.printStackTrace();
-            ctx.result("Server error: " + e.toString());
-        });
+//        app.exception(Exception.class, (e, ctx) -> {
+//            e.printStackTrace();
+//            ctx.result("Server error: " + e.toString());
+//        });
 
         app.start(8080);
 
@@ -41,7 +41,7 @@ public class Server {
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
             before("/digitalocean/*", authorizationController.authorize);
             before("/hetzner/*", authorizationController.authorize);
-            before("/users/*", authorizationController.authorize);
+//            before("/users/*", authorizationController.authorize);
 
             post(Endpoints.SESSION_TOKENS, authorizationController.login);
             delete(Endpoints.SESSION_TOKEN, authorizationController.logout);

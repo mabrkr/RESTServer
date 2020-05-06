@@ -18,12 +18,11 @@ public class DigitalOceanController {
     // See constructor below for configuration
     private UnirestInstance unirest;
 
-    private File keyFile;
-    private String token;
-
     public Handler getDroplets = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.get("/droplets")
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer " + key)
                 .asJson();
 
         ctx.status(response.getStatus());
@@ -32,8 +31,10 @@ public class DigitalOceanController {
     };
 
     public Handler getAccountInfo = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.get("/account")
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer "+ key)
                 .asJson();
 
         ctx.status(response.getStatus());
@@ -42,9 +43,11 @@ public class DigitalOceanController {
     };
 
     public Handler getDroplet = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.get("/droplets/{id}")
                 .routeParam("id", ctx.pathParam("id"))
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer "+ key)
                 .asJson();
 
         ctx.status(response.getStatus());
@@ -53,8 +56,10 @@ public class DigitalOceanController {
     };
 
     public Handler createDroplet = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse<JsonNode> response = unirest.post("/droplets")
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer "+ key)
                 .body(ctx.body())
                 .asJson();
 
@@ -64,25 +69,20 @@ public class DigitalOceanController {
     };
 
     public Handler deleteDroplet = ctx -> {
+        String key = ctx.header("API-key");
+
         HttpResponse response = unirest.delete("/droplets/{id}")
                 .routeParam("id", ctx.pathParam("id"))
-                .header("Authorization", "Bearer "+ token)
+                .header("Authorization", "Bearer "+ key)
                 .asEmpty();
 
         ctx.status(response.getStatus());
     };
 
     public DigitalOceanController() {
-        try {
-            keyFile = new File("..\\Auth\\digitaloceankey.txt");
-            token = new BufferedReader(new FileReader(keyFile)).readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         unirest = Unirest.spawnInstance();
         unirest.config()
-                .addShutdownHook(true) // TODO: check perfomance vs manual shutdown
+                .addShutdownHook(true)
                 .setDefaultHeader("Accept", "application/json")
                 .setDefaultHeader("Content-Type", "application/json")
                 .defaultBaseUrl("https://api.digitalocean.com/v2");

@@ -1,5 +1,6 @@
 package server.controllers;
 
+import dal.ApiKeyDTO;
 import dal.DatabaseController;
 import dal.DatabaseException;
 import dal.UserDTO;
@@ -20,30 +21,53 @@ public class UserController {
 
         ctx.status(200);
         ctx.header("Content-Type", "application/json");
-        // TODO: skal password sendes med her?
         ctx.json(user);
     };
 
     public Handler newUser = ctx -> {
-//        try {
-//
-//        } catch (DatabaseException e) {
-//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-//        }
+        UserDTO user;
+
+        try {
+             user = ctx.bodyAsClass(UserDTO.class);
+             DatabaseController.getInstance().createNewUser(user);
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
+        ctx.status(201);
+        ctx.header("Content-Type", "application/json");
+        ctx.json(user);
     };
 
     public Handler updateUser = ctx -> {
-//        try {
-//
-//        } catch (DatabaseException e) {
-//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-//        }
+        UserDTO user;
+
+        try {
+            user = ctx.bodyAsClass(UserDTO.class);
+            DatabaseController.getInstance().updateUser(user);
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
+        ctx.status(200);
+        ctx.header("Content-Type", "application/json");
+        ctx.json(user);
     };
+
     public Handler addApiKey = ctx -> {
-//        try {
-//
-//        } catch (DatabaseException e) {
-//            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
-//        }
+        ApiKeyDTO key;
+
+        try {
+            String username = ctx.queryParam("username");
+            key = ctx.bodyAsClass(ApiKeyDTO.class);
+            DatabaseController.getInstance().createOrUpdateApiKey(username, key);
+
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
+        ctx.status(201);
+        ctx.header("Content-Type", "application/json");
+        ctx.json(key);
     };
 }
