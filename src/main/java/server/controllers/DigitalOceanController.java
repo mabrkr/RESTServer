@@ -1,6 +1,11 @@
 package server.controllers;
 
+import dal.DatabaseController;
+import dal.DatabaseException;
+import io.javalin.core.util.Header;
 import io.javalin.http.Handler;
+import io.javalin.http.InternalServerErrorResponse;
+import io.javalin.http.UnauthorizedResponse;
 import kong.unirest.*;
 
 import java.io.BufferedReader;
@@ -19,6 +24,24 @@ public class DigitalOceanController {
     private UnirestInstance unirest;
 
     public Handler getDroplets = ctx -> {
+
+        try {
+            if (!ctx.basicAuthCredentialsExist()) {
+                throw new UnauthorizedResponse("No authorization credentials found.");
+            }
+
+            // Get username and password from the basic auth header
+            String username = ctx.basicAuthCredentials().getUsername();
+            String password = ctx.basicAuthCredentials().getPassword();
+
+            System.out.println(username + " : " + password);
+            if (!DatabaseController.getInstance().authenticateUser(username, password)) {
+                throw new UnauthorizedResponse("Wrong username and/or password");
+            }
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/droplets")
@@ -28,6 +51,7 @@ public class DigitalOceanController {
         ctx.status(response.getStatus());
         ctx.header("Content-Type", "application/json");
         ctx.result(response.getBody().toString());
+
     };
 
     public Handler getAccountInfo = ctx -> {

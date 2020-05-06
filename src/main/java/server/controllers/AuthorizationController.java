@@ -17,6 +17,8 @@ public class AuthorizationController {
             // Get username and password from the basic auth header
             String username = ctx.basicAuthCredentials().getUsername();
             String password = ctx.basicAuthCredentials().getPassword();
+
+            System.out.println(username + " : " + password);
             if (!DatabaseController.getInstance().authenticateUser(username, password)) {
                 throw new UnauthorizedResponse("Wrong username and/or password");
             }

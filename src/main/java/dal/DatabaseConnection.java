@@ -19,7 +19,7 @@ class DatabaseConnection {
         String tempUser = "";
         String tempPassword = "";
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("..\\Auth\\database.txt")))){
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("../Auth/database.txt")))){
             tempDb = bufferedReader.readLine();
             tempUser = bufferedReader.readLine();
             tempPassword = bufferedReader.readLine();

@@ -1,6 +1,7 @@
 package server;
 
 import io.javalin.Javalin;
+import io.javalin.core.util.Header;
 import kong.unirest.Unirest;
 import server.controllers.*;
 
@@ -20,26 +21,27 @@ public class Server {
         authorizationController = new AuthorizationController();
         userController = new UserController();
 
-        // Javalin server setup
-        Javalin app = Javalin.create();
 
-        app.config.enableCorsForAllOrigins();
+        Javalin app = Javalin.create(config ->
+                config.enableCorsForAllOrigins()
+        ).start(8080);
 
-        app.events(event -> {
-            event.serverStopped(() -> Unirest.shutDown());
-        });
+//        app.events(event -> {
+//            event.serverStopped(() -> Unirest.shutDown());
+//        });
+//
+//        app.exception(Exception.class, (e, ctx) -> {
+//            e.printStackTrace();
+//            ctx.result("Server error: " + e.toString());
+//        });
 
-        app.exception(Exception.class, (e, ctx) -> {
-            e.printStackTrace();
-            ctx.result("Server error: " + e.toString());
-        });
-
-        app.start(8080);
 
         // Javalin REST endpoints
         app.routes(() -> {
+
+
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
-            before("/digitalocean/*", authorizationController.authorize);
+//            get("/digitalocean/*", authorizationController.authorize);
             before("/hetzner/*", authorizationController.authorize);
             before("/users/*", authorizationController.authorize);
 
