@@ -58,7 +58,7 @@ public class UserController {
         ApiKeyDTO key;
 
         try {
-            String username = ctx.queryParam("username");
+            String username = ctx.pathParam("username");
             key = ctx.bodyAsClass(ApiKeyDTO.class);
             DatabaseController.getInstance().createOrUpdateApiKey(username, key);
 

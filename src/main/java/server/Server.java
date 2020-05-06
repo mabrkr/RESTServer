@@ -71,7 +71,7 @@ public class Server {
 
         private static final String USERS = "/users";
         private static final String USER = "/users/:username";
-        private static final String USER_API_KEYS = "/users/:id/apikeys";
+        private static final String USER_API_KEYS = "/users/:username/apikeys";
 
         private static final String DIGITAL_OCEAN_DROPLETS = "/digitalocean/droplets";
         private static final String DIGITAL_OCEAN_DROPLET = "/digitalocean/droplets/:id";
