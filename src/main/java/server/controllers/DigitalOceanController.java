@@ -19,7 +19,7 @@ public class DigitalOceanController {
     private UnirestInstance unirest;
 
     public Handler getDroplets = ctx -> {
-        String key = ctx.header("API-key");
+        String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/droplets")
                 .header("Authorization", "Bearer " + key)
@@ -31,7 +31,7 @@ public class DigitalOceanController {
     };
 
     public Handler getAccountInfo = ctx -> {
-        String key = ctx.header("API-key");
+        String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/account")
                 .header("Authorization", "Bearer "+ key)
@@ -43,7 +43,7 @@ public class DigitalOceanController {
     };
 
     public Handler getDroplet = ctx -> {
-        String key = ctx.header("API-key");
+        String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/droplets/{id}")
                 .routeParam("id", ctx.pathParam("id"))
@@ -56,7 +56,7 @@ public class DigitalOceanController {
     };
 
     public Handler createDroplet = ctx -> {
-        String key = ctx.header("API-key");
+        String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.post("/droplets")
                 .header("Authorization", "Bearer "+ key)
@@ -69,7 +69,7 @@ public class DigitalOceanController {
     };
 
     public Handler deleteDroplet = ctx -> {
-        String key = ctx.header("API-key");
+        String key = ctx.header("API-Key");
 
         HttpResponse response = unirest.delete("/droplets/{id}")
                 .routeParam("id", ctx.pathParam("id"))
