@@ -17,7 +17,7 @@ public class AuthorizationController {
     public Handler logout = ctx -> {
     };
 
-    public void authorize(Context ctx) {
+    public static void authorize(Context ctx) {
         try {
             if (!ctx.basicAuthCredentialsExist()) {
                 throw new UnauthorizedResponse("No authorization credentials found.");

@@ -10,6 +10,8 @@ import io.javalin.http.InternalServerErrorResponse;
 public class UserController {
 
     public Handler getUser = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         UserDTO user;
 
         try {
@@ -24,6 +26,7 @@ public class UserController {
         ctx.json(user);
     };
 
+    // No authorization.
     public Handler newUser = ctx -> {
         UserDTO user;
 
@@ -40,6 +43,8 @@ public class UserController {
     };
 
     public Handler updateUser = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         UserDTO user;
 
         try {
@@ -55,6 +60,8 @@ public class UserController {
     };
 
     public Handler addApiKey = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         ApiKeyDTO key;
 
         try {

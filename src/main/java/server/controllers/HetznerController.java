@@ -19,6 +19,8 @@ public class HetznerController {
     private UnirestInstance unirest;
 
     public Handler getServers = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/servers")
@@ -31,6 +33,8 @@ public class HetznerController {
     };
 
     public Handler getServer = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/servers/{id}")
@@ -44,6 +48,8 @@ public class HetznerController {
     };
 
     public Handler createServer = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.post("/servers")
@@ -57,6 +63,8 @@ public class HetznerController {
     };
 
     public Handler deleteServer = ctx -> {
+        AuthorizationController.authorize(ctx);
+
         String key = ctx.header("API-Key");
 
         HttpResponse response = unirest.delete("/servers/{id}")
