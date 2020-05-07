@@ -1,7 +1,6 @@
 package server;
 
 import io.javalin.Javalin;
-import io.javalin.core.util.Header;
 import kong.unirest.Unirest;
 import server.controllers.*;
 
@@ -22,19 +21,13 @@ public class Server {
         userController = new UserController();
 
 
-        Javalin app = Javalin.create(config ->
-                config.enableCorsForAllOrigins()
-        ).start(8080);
+        Javalin app = Javalin.create(config -> {
+                config.enableCorsForAllOrigins();
+        }).start(8080);
 
-//        app.events(event -> {
-//            event.serverStopped(() -> Unirest.shutDown());
-//        });
-//
-//        app.exception(Exception.class, (e, ctx) -> {
-//            e.printStackTrace();
-//            ctx.result("Server error: " + e.toString());
-//        });
-
+        app.events(event -> {
+            event.serverStopped(() -> Unirest.shutDown());
+        });
 
         // Javalin REST endpoints
         app.routes(() -> {

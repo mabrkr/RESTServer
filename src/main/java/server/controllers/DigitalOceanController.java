@@ -30,9 +30,9 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer " + key)
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
 
     };
 
@@ -43,9 +43,9 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer "+ key)
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler getDroplet = ctx -> {
@@ -56,9 +56,9 @@ public class DigitalOceanController {
                 .header("Authorization", "Bearer "+ key)
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler createDroplet = ctx -> {
@@ -69,9 +69,9 @@ public class DigitalOceanController {
                 .body(ctx.body())
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler deleteDroplet = ctx -> {

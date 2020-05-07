@@ -25,9 +25,9 @@ public class HetznerController {
                 .header("Authorization", "Bearer " + key)
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler getServer = ctx -> {
@@ -38,9 +38,9 @@ public class HetznerController {
                 .header("Authorization", "Bearer " + key)
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler createServer = ctx -> {
@@ -51,9 +51,9 @@ public class HetznerController {
                 .body(ctx.body())
                 .asJson();
 
-        ctx.status(response.getStatus());
-        ctx.header("Content-Type", "application/json");
-        ctx.result(response.getBody().toString());
+        ctx.status(response.getStatus())
+                .header("Content-Type", "application/json")
+                .result(response.getBody().toString());
     };
 
     public Handler deleteServer = ctx -> {

@@ -15,11 +15,12 @@ class DatabaseConnection {
     private final String password;
 
     DatabaseConnection() {
+        String path = ".." + File.separator + "Auth" + File.separator + "database.txt";
         String tempDb = "";
         String tempUser = "";
         String tempPassword = "";
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File("../Auth/database.txt")))){
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(path)))) {
             tempDb = bufferedReader.readLine();
             tempUser = bufferedReader.readLine();
             tempPassword = bufferedReader.readLine();
