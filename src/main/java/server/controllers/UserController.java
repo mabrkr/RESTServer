@@ -1,5 +1,7 @@
 package server.controllers;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.google.gson.Gson;
 import dal.ApiKeyDTO;
 import dal.DatabaseController;
 import dal.DatabaseException;
@@ -46,7 +48,7 @@ public class UserController {
         UserDTO user;
 
         try {
-            user = ctx.bodyAsClass(UserDTO.class);
+            user = new Gson().fromJson(ctx.body(), UserDTO.class);
             DatabaseController.getInstance().createNewUser(user);
         } catch (DatabaseException e) {
             throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
@@ -63,7 +65,8 @@ public class UserController {
         UserDTO user;
 
         try {
-            user = ctx.bodyAsClass(UserDTO.class);
+
+            user = new Gson().fromJson(ctx.body(), UserDTO.class);
             DatabaseController.getInstance().updateUser(user);
         } catch (DatabaseException e) {
             throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
@@ -81,7 +84,7 @@ public class UserController {
 
         try {
             String username = ctx.pathParam("username");
-            key = ctx.bodyAsClass(ApiKeyDTO.class);
+            key = new Gson().fromJson(ctx.body(), ApiKeyDTO.class);
             DatabaseController.getInstance().createOrUpdateApiKey(username, key);
 
         } catch (DatabaseException e) {
