@@ -38,12 +38,10 @@ public class Server {
 
         // Javalin REST endpoints
         app.routes(() -> {
-
-
             before(ctx -> System.out.println("Server: " + ctx.method() + " on " + ctx.url()));
-//            get("/digitalocean/*", authorizationController.authorize);
-            before("/hetzner/*", authorizationController.authorize);
-            before("/users/*", authorizationController.authorize);
+            get("/digitalocean/*", ctx -> authorizationController.authorize(ctx));
+            before("/hetzner/*", ctx -> authorizationController.authorize(ctx));
+            before("/users/*", ctx -> authorizationController.authorize(ctx));
 
             post(Endpoints.SESSION_TOKENS, authorizationController.login);
             delete(Endpoints.SESSION_TOKEN, authorizationController.logout);
