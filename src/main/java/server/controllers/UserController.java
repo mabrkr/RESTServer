@@ -9,6 +9,21 @@ import io.javalin.http.InternalServerErrorResponse;
 
 public class UserController {
 
+    public Handler authenticateUser = ctx -> {
+        AuthorizationController.authorize(ctx);
+        UserDTO user;
+        try {
+            String username = ctx.basicAuthCredentials().getUsername();
+            user = DatabaseController.getInstance().getUser(username);
+        } catch (DatabaseException e) {
+            throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
+        }
+
+        ctx.status(200);
+        ctx.header("Content-Type", "application/json");
+        ctx.json(user);
+    };
+
     public Handler getUser = ctx -> {
         AuthorizationController.authorize(ctx);
 
@@ -31,8 +46,8 @@ public class UserController {
         UserDTO user;
 
         try {
-             user = ctx.bodyAsClass(UserDTO.class);
-             DatabaseController.getInstance().createNewUser(user);
+            user = ctx.bodyAsClass(UserDTO.class);
+            DatabaseController.getInstance().createNewUser(user);
         } catch (DatabaseException e) {
             throw new InternalServerErrorResponse("Server database error: " + e.getMessage());
         }

@@ -22,7 +22,7 @@ public class Server {
 
 
         Javalin app = Javalin.create(config -> {
-                config.enableCorsForAllOrigins();
+            config.enableCorsForAllOrigins();
         }).start(8080);
 
         app.events(event -> {
@@ -37,6 +37,7 @@ public class Server {
             delete(Endpoints.SESSION_TOKEN, authorizationController.logout);
 
             get(Endpoints.USER, userController.getUser);
+            post(Endpoints.USERS_AUTH, userController.authenticateUser);
             post(Endpoints.USER_API_KEYS, userController.addApiKey);
             post(Endpoints.USERS, userController.newUser);
             post(Endpoints.USER, userController.updateUser);
@@ -60,6 +61,7 @@ public class Server {
         private static final String SESSION_TOKEN = "/sessions/:token";
 
         private static final String USERS = "/users";
+        private static final String USERS_AUTH = "/users/authenticate";
         private static final String USER = "/users/:username";
         private static final String USER_API_KEYS = "/users/:username/apikeys";
 

@@ -39,8 +39,6 @@ public class DigitalOceanController {
     };
 
     public Handler getAccountInfo = ctx -> {
-        AuthorizationController.authorize(ctx);
-
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/account")
@@ -53,8 +51,6 @@ public class DigitalOceanController {
     };
 
     public Handler getDroplet = ctx -> {
-        AuthorizationController.authorize(ctx);
-
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.get("/droplets/{id}")
@@ -68,8 +64,6 @@ public class DigitalOceanController {
     };
 
     public Handler createDroplet = ctx -> {
-        AuthorizationController.authorize(ctx);
-
         String key = ctx.header("API-Key");
 
         HttpResponse<JsonNode> response = unirest.post("/droplets")
@@ -83,8 +77,6 @@ public class DigitalOceanController {
     };
 
     public Handler deleteDroplet = ctx -> {
-        AuthorizationController.authorize(ctx);
-
         String key = ctx.header("API-Key");
 
         HttpResponse response = unirest.delete("/droplets/{id}")
